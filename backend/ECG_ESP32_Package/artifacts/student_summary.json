@@ -1,0 +1,17 @@
+{
+  "teacher": {
+    "auroc": 0.8788,
+    "params": 30655025,
+    "fp32_size_mb": 116.9
+  },
+  "student_fp32": {
+    "auroc": 0.8603999999999999,
+    "params": 32097,
+    "tflite_size_kb": 130.5
+  },
+  "student_int8": {
+    "auroc": 0.8595,
+    "tflite_size_kb": 59.5,
+    "compression_vs_teacher": "2013x"
+  }
+}

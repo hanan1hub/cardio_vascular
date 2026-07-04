@@ -1,0 +1,4 @@
+{
+  "classes": ["AS", "MR", "MS", "MVP", "N"],
+  "note": "Matches actual training dataset. AS=Aortic Stenosis, MR=Mitral Regurgitation, MS=Mitral Stenosis, MVP=Mitral Valve Prolapse, N=Normal"
+}

@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "name": "ESP32 Arduino",
+      "includePath": [
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/hardware/esp32/3.3.7/cores/esp32",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/hardware/esp32/3.3.7/variants/esp32",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/hardware/esp32/3.3.7/libraries/WiFi/src",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/hardware/esp32/3.3.7/libraries/HTTPClient/src",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/hardware/esp32/3.3.7/libraries/Wire",
+        "C:/Users/DR JAVED/Documents/Arduino/libraries/LiquidCrystal_I2C",
+        "C:/Users/DR JAVED/Documents/Arduino/libraries/SparkFun_MAX3010x_Pulse_and_Proximity_Sensor_Library/src",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/tools/esp32-libs/3.3.7/include",
+        "C:/Users/DR JAVED/AppData/Local/Arduino15/packages/esp32/tools/esp32-libs/3.3.7/include/driver/deprecated"
+      ],
+      "defines": [
+        "ARDUINO=10819",
+        "ESP32",
+        "CONFIG_IDF_TARGET_ESP32"
+      ],
+      "compilerPath": "",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x64"
+    }
+  ],
+  "version": 4
+}

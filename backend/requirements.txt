@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+numpy
+scipy
+scikit-learn
+torch --index-url https://download.pytorch.org/whl/cpu
+librosa
+soundfile
+tensorflow-cpu
+gpytorch
+python-multipart

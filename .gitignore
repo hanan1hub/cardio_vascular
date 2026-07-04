@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+backend/venv/
+venv/
+.venv/
+frontend/dist/
+
+# Environment / secrets
+.env
+*.env
+ServiceAccountKey.json
+backend/serviceAccountKey.json
+*.pem
+*.key
+
+# Claude memory
+.claude/
+
+# Documentation / text files
+*.md
+*.txt
+!backend/requirements.txt
+
+# Large ML model weights (too large for GitHub — store separately)
+*.h5
+*.pth
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,42 @@
+{
+  "report_type": "vitals_summary",
+  "generated_at": "2026-02-11T19:00:56.521Z",
+  "device_id": "test-hardcoded",
+  "time_range": {
+    "start": "2026-02-11T19:00:56.185Z",
+    "end": "2026-02-11T19:00:56.185Z",
+    "duration_minutes": 5
+  },
+  "summary": {
+    "total_readings": 1,
+    "hr_avg": 72,
+    "hr_min": 72,
+    "hr_max": 72,
+    "spo2_avg": 98,
+    "spo2_min": 98,
+    "spo2_max": 98,
+    "sbp_avg": 120,
+    "sbp_min": 120,
+    "sbp_max": 120,
+    "dbp_avg": 80,
+    "dbp_min": 80,
+    "dbp_max": 80
+  },
+  "readings": [
+    {
+      "timestamp": "2026-02-11T19:00:56.185Z",
+      "heart_rate": 72,
+      "spo2": 98,
+      "blood_pressure": "120/80",
+      "mean_bp": 93,
+      "blood_sugar": 90,
+      "ecg_samples": 125,
+      "ppg_samples": 125
+    }
+  ],
+  "notes": [
+    "This is an automated vitals report",
+    "BP values are ML-predicted and should be verified with clinical measurements",
+    "Consult a healthcare professional for medical advice"
+  ]
+}
