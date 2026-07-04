@@ -3,7 +3,7 @@ import { X, Send, Heart, Activity } from "lucide-react";
 
 // Using the stable model name verified from your account's API list
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const MODEL_NAME = "gemini-2.5-flash";
+const MODEL_NAME = "gemini-2.5-flash-lite";
 
 interface Message {
   id: string;
@@ -71,30 +71,43 @@ export default function ChatBot() {
     setInput("");
     setIsLoading(true);
 
-    try {
-      const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
-      
+    const prompt = `System: You are CardioBot, a medical assistant for the CardioTrix monitor. Be empathetic and keep answers under 3 sentences. User says: ${messageText}`;
+
+    // Call Gemini with one automatic retry on transient rate-limit / overload
+    const callGemini = async (attempt = 0): Promise<string> => {
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{
-            parts: [{ text: `System: You are CardioBot, a medical assistant for the CardioTrix monitor. Be empathetic and keep answers under 3 sentences. User says: ${messageText}` }]
-          }]
-        })
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 250, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } },
+        }),
       });
-
+      if ((response.status === 429 || response.status === 503) && attempt < 2) {
+        await new Promise(r => setTimeout(r, 2000));
+        return callGemini(attempt + 1);
+      }
+      if (response.status === 429) throw new Error("RATE_LIMIT");
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || "API Error");
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("EMPTY");
+      return text;
+    };
 
-      const botText = data.candidates[0].content.parts[0].text;
+    try {
+      const botText = await callGemini();
       setMessages(prev => [...prev, { id: Date.now().toString(), role: "assistant", content: botText, timestamp: new Date() }]);
     } catch (err: any) {
-      setMessages(prev => [...prev, { 
-        id: `err-${Date.now()}`, 
-        role: "assistant", 
-        content: "I'm having a connection hiccup! Check your hotspot. ❤️", 
-        timestamp: new Date() 
+      const friendly = err?.message === "RATE_LIMIT"
+        ? "I'm getting a lot of questions right now! 💗 Please wait a few seconds and ask again."
+        : "I'm having a connection hiccup! Check your hotspot. ❤️";
+      setMessages(prev => [...prev, {
+        id: `err-${Date.now()}`,
+        role: "assistant",
+        content: friendly,
+        timestamp: new Date()
       }]);
     } finally {
       setIsLoading(false);
