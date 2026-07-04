@@ -145,8 +145,10 @@ Training notebooks are in [`backend/`](backend/) (`Heart_Sound_Prediction.ipynb`
 `PPG_Retrain_With_Custom_Data.ipynb`, `RetrainModel (1).ipynb`), and the ECG
 knowledge-distillation package is in `backend/ECG_ESP32_Package/`.
 
-> Model weights (`.h5`, `.pth`) are **not** committed to git (size/licensing); they are
-> provided separately and placed in `backend/` at deploy time.
+> ⚠️ **Trained model weights (`.h5`, `.pth`) are NOT in this repository.** They are large
+> binary files (the PCG `.h5` is ~80 MB) and are excluded from git. You must obtain or
+> retrain them and place them in `backend/` before the servers will run — see
+> [Required Files Not in the Repo](#-required-files-not-in-the-repo).
 
 ---
 
@@ -217,6 +219,24 @@ Cardiovascular-Health-Monitoring-System/
 git clone https://github.com/hanan1hub/cardio_vascular.git
 cd cardio_vascular
 ```
+
+### ⚠️ Required Files Not in the Repo
+Large trained models and secrets are **gitignored**, so a fresh clone will **not** include
+them. The app will not fully run until you add these into place:
+
+| File | Where | Size | What it is | How to get it |
+|---|---|---|---|---|
+| `best_model_fold_2.h5` | `backend/` | ~80 MB | **Trained PCG heart-sound model (Keras)** | Retrain via `Heart_Sound_Prediction.ipynb`, or get from the team |
+| `bp_cnn_bilstm.pth` | `backend/` | ~300 KB | **Trained BP model (PyTorch)** | Retrain via `RetrainModel (1).ipynb`, or get from the team |
+| `model_fold_5 (3).h5` | `backend/` | ~80 MB | Original PCG model *(optional)* | from the team |
+| `serviceAccountKey.json` | `backend/` | small | Firebase Admin credentials | Firebase Console → Project Settings → Service Accounts |
+| `backend/.env` | `backend/` | small | server config (ports, ML URLs) | see [Environment Variables](#-environment-variables) |
+| `frontend/.env` | `frontend/` | small | `VITE_GEMINI_API_KEY` | create your own key |
+
+> ✅ The **small** model/support files **are** included in the repo:
+> `final_bp_models.pkl`, `deploy_config.pkl`, `student_int8.tflite`, `student_fp32.tflite`,
+> `normalization_stats.json`, `pcg_classes.json`. Only the large `.h5`/`.pth` weights and
+> the secrets are excluded. Place the files above in the paths shown, then continue below.
 
 ### 2. Backend — Python ML servers
 ```bash
@@ -323,7 +343,7 @@ Licensed under the **ISC License** — see [LICENSE](LICENSE).
 
 ## 📧 Contact
 
-- **Email:** akhan.bee22seecs@seecs.edu.pk · mahmad24504@gmail.com
+- **Email:** hmajeed.bsds24seecs@seecs.edu.pk · akhan.bee22seecs@seecs.edu.pk · mahmad24504@gmail.com
 - Issues and contributions welcome via GitHub.
 
 ---
