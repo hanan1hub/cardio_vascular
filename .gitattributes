@@ -1,0 +1,6 @@
+# Exclude Jupyter training notebooks from GitHub's language statistics
+# (they are large and otherwise dominate the "Languages" bar)
+*.ipynb linguist-vendored
+
+# Count these as documentation, not code, in language stats
+*.md linguist-documentation
