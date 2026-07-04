@@ -18,6 +18,7 @@ backend/serviceAccountKey.json
 
 # Documentation / text files
 *.md
+!README.md
 *.txt
 !backend/requirements.txt
 
