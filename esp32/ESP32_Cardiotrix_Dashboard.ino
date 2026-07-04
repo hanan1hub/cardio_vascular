@@ -45,7 +45,7 @@
 // ── WiFi / Backend ────────────────────────────────────────────────────────────
 const char* SSID       = "SoC_Lab";
 const char* PASSWORD   = "research@soc";
-const char* SERVER_URL = "http://10.7.161.78:5000/api/readings";
+const char* SERVER_URL = "http://100.59.81.84/api/readings";
 
 // ── I2S pins (INMP441) ────────────────────────────────────────────────────────
 #define I2S_WS   15

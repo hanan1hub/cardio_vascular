@@ -25,7 +25,7 @@
 // ========== CONFIGURATION ==========
 const char* ssid = "SoC_Lab";
 const char* password = "research@soc";
-const char* SERVER_URL = "http://10.7.161.78:5000";  // Change to your server IP (include port!)
+const char* SERVER_URL = "http://100.59.81.84";  // Change to your server IP (include port!)
 const char* DEVICE_ID = "esp32-device-001";
 
 // ========== GLOBAL VARIABLES ==========

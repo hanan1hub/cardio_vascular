@@ -30,7 +30,7 @@ const char* password = "research@soc";    // Change this
 // For local network: "http://192.168.1.100:5000"
 // For localhost (if ESP32 and server on same machine): "http://localhost:5000"
 // For public server: "http://your-server.com:5000"
-const char* SERVER_URL = "http://10.7.161.78:5000";  // Change this to your server IP
+const char* SERVER_URL = "http://100.59.81.84";  // Change this to your server IP
 
 // Device ID (unique identifier for this ESP32)
 const char* DEVICE_ID = "esp32-device-001";
