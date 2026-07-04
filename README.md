@@ -30,7 +30,6 @@
 - [Environment Variables](#-environment-variables)
 - [API Reference](#-api-reference)
 - [Deployment](#-deployment)
-- [Team](#-team)
 - [License](#-license)
 
 ---
@@ -317,11 +316,6 @@ command, every error and fix — is in **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 6. Assign an **Elastic IP**, then point the ESP32 firmware at `http://<EIP>/api/readings`.
 
 ---
-
-## 👥 Team
-
-Developed as a **Design Project** — hardware, firmware, ML, backend, and frontend by the
-project team.
 
 ## 📜 License
 
