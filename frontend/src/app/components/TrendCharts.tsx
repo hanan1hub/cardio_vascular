@@ -218,7 +218,7 @@ const sbpColor  = (v: number) => v >= 130 ? "#ef4444" : v < 90 ? "#3b82f6" : "#1
 const dbpColor  = (v: number) => v >= 85  ? "#ef4444" : v < 60 ? "#3b82f6" : "#10b981";
 
 const SbpDot  = (p: any) => (p.cx != null && p.payload.sbp)  ? <circle cx={p.cx} cy={p.cy} r={3.5} fill={sbpColor(p.payload.sbp)} /> : null;
-const DbpDot  = (p: any) => (p.cx != null && p.payload.dbp)  ? <circle cx={p.cx} cy={p.cy} r={3.5} fill={dbpColor(p.payload.dbp)} opacity={0.8} /> : null;
+const DbpDot  = (p: any) => (p.cx != null && p.payload.dbp)  ? <circle cx={p.cx} cy={p.cy} r={3.5} fill={dbpColor(p.payload.dbp)} /> : null;
 const HrDot   = (p: any) => (p.cx != null && p.payload.hr)   ? <circle cx={p.cx} cy={p.cy} r={3.5} fill={hrColor(p.payload.hr)} /> : null;
 const Spo2Dot = (p: any) => (p.cx != null && p.payload.spo2) ? <circle cx={p.cx} cy={p.cy} r={3.5} fill={spo2Color(p.payload.spo2)} /> : null;
 
@@ -336,12 +336,14 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
                 <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <YAxis domain={[50, 170]} tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <Tooltip contentStyle={ts} />
-                <Line type="monotone" dataKey="sbp" stroke="#8b5cf6" strokeWidth={2} dot={(p: any) => <SbpDot {...p} />} name="SBP" connectNulls />
-                <Line type="monotone" dataKey="dbp" stroke="#c4b5fd" strokeWidth={2} dot={(p: any) => <DbpDot {...p} />} name="DBP" connectNulls />
+                <Line type="monotone" dataKey="sbp" stroke="#7c3aed" strokeWidth={2.5} dot={(p: any) => <SbpDot {...p} />} name="SBP" connectNulls />
+                <Line type="monotone" dataKey="dbp" stroke="#0891b2" strokeWidth={2.5} dot={(p: any) => <DbpDot {...p} />} name="DBP" connectNulls />
               </LineChart>
             )}
           </ResponsiveContainer>
           <div className="flex gap-3 mt-1 flex-wrap">
+            <span className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)]"><span className="w-3 h-[3px] rounded inline-block" style={{ background: "#7c3aed" }} />SBP line</span>
+            <span className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)]"><span className="w-3 h-[3px] rounded inline-block" style={{ background: "#0891b2" }} />DBP line</span>
             <span className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)]"><span className="w-2 h-2 rounded-full inline-block bg-emerald-500" />Normal</span>
             <span className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)]"><span className="w-2 h-2 rounded-full inline-block bg-red-500" />High</span>
             <span className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)]"><span className="w-2 h-2 rounded-full inline-block bg-blue-500" />Low</span>
@@ -380,7 +382,7 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
                 <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <YAxis domain={[40, 130]} tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <Tooltip contentStyle={ts} />
-                <Line type="monotone" dataKey="hr" stroke="#f43f5e" strokeWidth={2} dot={(p: any) => <HrDot {...p} />} name="HR (BPM)" connectNulls />
+                <Line type="monotone" dataKey="hr" stroke="#f43f5e" strokeWidth={2.5} dot={(p: any) => <HrDot {...p} />} name="HR (BPM)" connectNulls />
               </LineChart>
             )}
           </ResponsiveContainer>
@@ -411,7 +413,7 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
                 <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <YAxis domain={[85, 100]} tick={{ fontSize: 9 }} stroke="var(--border)" />
                 <Tooltip contentStyle={ts} />
-                <Line type="monotone" dataKey="spo2" stroke="#6366f1" strokeWidth={2} dot={(p: any) => <Spo2Dot {...p} />} name="SpO₂ (%)" connectNulls />
+                <Line type="monotone" dataKey="spo2" stroke="#6366f1" strokeWidth={2.5} dot={(p: any) => <Spo2Dot {...p} />} name="SpO₂ (%)" connectNulls />
               </LineChart>
             )}
           </ResponsiveContainer>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Heart, Stethoscope, User } from "lucide-react";
 import { auth, db } from "../../firebase";
@@ -32,6 +32,43 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const navigate = useNavigate();
+
+  // ── Signup rate-limit: 5-minute cooldown after an attempt (survives page reloads) ──
+  const COOLDOWN_MS = 5 * 60 * 1000;
+  const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
+  const [nowTs, setNowTs] = useState<number>(Date.now());
+
+  useEffect(() => {
+    const saved = Number(localStorage.getItem("signupCooldownUntil") || 0);
+    if (saved > Date.now()) setCooldownEnd(saved);
+  }, []);
+
+  useEffect(() => {
+    if (!cooldownEnd) return;
+    const id = setInterval(() => {
+      const t = Date.now();
+      setNowTs(t);
+      if (t >= cooldownEnd) {
+        setCooldownEnd(null);
+        localStorage.removeItem("signupCooldownUntil");
+        clearInterval(id);
+      }
+    }, 1000);
+    return () => clearInterval(id);
+  }, [cooldownEnd]);
+
+  const remainingMs = cooldownEnd ? Math.max(0, cooldownEnd - nowTs) : 0;
+  const isCoolingDown = remainingMs > 0;
+  const mmss =
+    `${String(Math.floor(remainingMs / 60000)).padStart(2, "0")}:` +
+    `${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, "0")}`;
+
+  function startCooldown() {
+    const until = Date.now() + COOLDOWN_MS;
+    localStorage.setItem("signupCooldownUntil", String(until));
+    setNowTs(Date.now());
+    setCooldownEnd(until);
+  }
 
   function validateEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -88,13 +125,16 @@ export default function SignUp() {
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    if (isCoolingDown) return;               // locked — ignore (button is disabled too)
     setError("");
     setValidationErrors({});
 
     if (!validateForm()) {
       setError("Please fix the errors below");
-      return;
+      return;                                // typos don't trigger the lock
     }
+
+    startCooldown();                         // valid attempt → start the 5-minute lock
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -155,6 +195,16 @@ export default function SignUp() {
         className="relative bg-[var(--card)] p-8 rounded-xl shadow-sm w-full max-w-md border border-[var(--border)]"
         onSubmit={handleSignUp}
       >
+        {isCoolingDown && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 rounded-xl bg-[var(--card)]/95 backdrop-blur-sm text-center p-6">
+            <div className="w-14 h-14 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+            <p className="text-lg font-semibold text-[var(--foreground)]">Please wait before trying again</p>
+            <p className="text-5xl font-bold tabular-nums text-[var(--primary)]">{mmss}</p>
+            <p className="text-sm text-[var(--muted-foreground)] max-w-xs">
+              To prevent spam, sign-up is temporarily locked. The button will re-enable when the timer reaches 0.
+            </p>
+          </div>
+        )}
         <div className="flex justify-center mb-6">
           <div className="p-4 bg-[var(--primary)] rounded-full">
             <Heart className="w-10 h-10 text-white" fill="white" />
@@ -374,10 +424,11 @@ export default function SignUp() {
         </div>
 
         <button
-          className="w-full py-3 text-white rounded-lg font-medium transition-all shadow-sm bg-[var(--primary)] hover:bg-orange-600"
+          className="w-full py-3 text-white rounded-lg font-medium transition-all shadow-sm bg-[var(--primary)] hover:bg-orange-600 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[var(--primary)]"
           type="submit"
+          disabled={isCoolingDown}
         >
-          Sign Up as {role === "doctor" ? "Doctor" : "Patient"}
+          {isCoolingDown ? `Please wait ${mmss}` : `Sign Up as ${role === "doctor" ? "Doctor" : "Patient"}`}
         </button>
 
         <p className="text-center mt-6 text-[var(--muted-foreground)]">
