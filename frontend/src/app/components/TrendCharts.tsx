@@ -203,10 +203,20 @@ function useChartData(readings: TrendReading[], period: "week" | "month" | "year
     const avg = (arr: number[]) =>
       arr.length ? Math.round(arr.reduce((a, b) => a + b) / arr.length * 10) / 10 : null;
 
+    const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const formatLabel = (k: string) => {
+      if (period === "year") {
+        const [y, m] = k.split("-");
+        return `${MONTHS[Number(m) - 1]} ${y}`;              // "Jul 2026"
+      }
+      const [, m, d] = k.split("-");
+      return `${Number(d)} ${MONTHS[Number(m) - 1]}`;        // "6 Jul"
+    };
+
     return Object.entries(grouped)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([k, v]) => ({
-        date: period === "year" ? k : k.slice(5),
+        date: formatLabel(k),
         hr: avg(v.hr), spo2: avg(v.spo2), sbp: avg(v.sbp), dbp: avg(v.dbp),
       }));
   }, [readings, period]);
@@ -314,14 +324,14 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* BP */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4">
+        <div className="bg-[var(--card)] border border-slate-300 dark:border-slate-600 rounded-xl p-4 shadow-sm">
           <p className="text-xs font-semibold text-violet-600 mb-2">Blood Pressure (mmHg)</p>
           <ResponsiveContainer width="100%" height={130}>
             {isBar ? (
               <BarChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[50, 170]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[50, 170]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Bar dataKey="sbp" name="SBP" maxBarSize={16}>
                   {data.map((e, i) => <Cell key={i} fill={bpBarFill(e, "sbp")} />)}
@@ -332,9 +342,9 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
               </BarChart>
             ) : (
               <LineChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[50, 170]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[50, 170]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Line type="monotone" dataKey="sbp" stroke="#7c3aed" strokeWidth={2.5} dot={(p: any) => <SbpDot {...p} />} name="SBP" connectNulls />
                 <Line type="monotone" dataKey="dbp" stroke="#0891b2" strokeWidth={2.5} dot={(p: any) => <DbpDot {...p} />} name="DBP" connectNulls />
@@ -351,7 +361,7 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
         </div>
 
         {/* ECG Waveform */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4">
+        <div className="bg-[var(--card)] border border-slate-300 dark:border-slate-600 rounded-xl p-4 shadow-sm">
           <p className="text-xs font-semibold text-emerald-600 mb-2">ECG Waveform — Latest Recording</p>
           {latestEcg && (
             <p className="text-[10px] text-[var(--muted-foreground)] mb-1">
@@ -363,14 +373,14 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
         </div>
 
         {/* HR */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4">
+        <div className="bg-[var(--card)] border border-slate-300 dark:border-slate-600 rounded-xl p-4 shadow-sm">
           <p className="text-xs font-semibold text-rose-600 mb-2">Heart Rate (BPM)</p>
           <ResponsiveContainer width="100%" height={130}>
             {isBar ? (
               <BarChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[40, 130]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[40, 130]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Bar dataKey="hr" name="HR (BPM)" maxBarSize={20}>
                   {data.map((e, i) => <Cell key={i} fill={hrBarFill(e)} />)}
@@ -378,9 +388,9 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
               </BarChart>
             ) : (
               <LineChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[40, 130]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[40, 130]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Line type="monotone" dataKey="hr" stroke="#f43f5e" strokeWidth={2.5} dot={(p: any) => <HrDot {...p} />} name="HR (BPM)" connectNulls />
               </LineChart>
@@ -394,14 +404,14 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
         </div>
 
         {/* SpO2 */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4">
+        <div className="bg-[var(--card)] border border-slate-300 dark:border-slate-600 rounded-xl p-4 shadow-sm">
           <p className="text-xs font-semibold text-indigo-600 mb-2">SpO₂ (%)</p>
           <ResponsiveContainer width="100%" height={130}>
             {isBar ? (
               <BarChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[85, 100]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[85, 100]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Bar dataKey="spo2" name="SpO₂ (%)" maxBarSize={20}>
                   {data.map((e, i) => <Cell key={i} fill={spo2BarFill(e)} />)}
@@ -409,9 +419,9 @@ export function TrendCharts({ readings }: { readings: TrendReading[] }) {
               </BarChart>
             ) : (
               <LineChart data={data} margin={mg}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 9 }} stroke="var(--border)" />
-                <YAxis domain={[85, 100]} tick={{ fontSize: 9 }} stroke="var(--border)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" opacity={0.35} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
+                <YAxis domain={[85, 100]} tick={{ fontSize: 9, fill: "var(--muted-foreground)" }} stroke="#94a3b8" />
                 <Tooltip contentStyle={ts} />
                 <Line type="monotone" dataKey="spo2" stroke="#6366f1" strokeWidth={2.5} dot={(p: any) => <Spo2Dot {...p} />} name="SpO₂ (%)" connectNulls />
               </LineChart>
