@@ -15,6 +15,8 @@
 > disease detection and blood-pressure estimation, and presents everything on a live
 > React dashboard — with an AI health assistant (CardioBot) built in.
 
+**🌐 Live demo:** [https://cardiotrix.medwalee.com](https://cardiotrix.medwalee.com)
+
 ---
 
 ## 📋 Table of Contents
